@@ -1,0 +1,142 @@
+/* style.css (with additions for resume) */
+
+/* --- Global Styles --- */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #0B1E3B;
+  color: #E5E7EB;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+/* --- Container & Layout --- */
+.container {
+  background-color: #122947;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 500px; /* For project pages */
+  text-align: center;
+  margin: 2rem auto;
+}
+
+/* New container for the wider resume layout */
+.resume-container {
+  padding: 2rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.section-box {
+  background-color: #122947;
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+}
+
+/* --- Typography --- */
+h1, h2 {
+  color: #FFD60A;
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+h1 {
+    font-size: 2.5em;
+}
+
+h2 {
+  border-bottom: 1px solid #FFD60A;
+  padding-bottom: 0.5rem;
+}
+
+h3 {
+  margin: 0;
+}
+
+p {
+  color: #9CA3AF;
+  line-height: 1.5;
+  margin-top: 0.5rem;
+}
+
+ul {
+  padding-left: 20px;
+  color: #9CA3AF;
+}
+
+/* --- Utility Text Classes (New) --- */
+.text-green { color: #7AE582; }
+.text-blue { color: #3ABFF8; }
+.text-light-gray { color: #9CA3AF; }
+
+/* --- Links --- */
+a {
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+a:hover {
+  opacity: 0.8;
+}
+
+.link-primary { color: #FFD60A; }
+.link-secondary { color: #3ABFF8; }
+
+/* --- Header & Footer (New) --- */
+header {
+  border-bottom: 2px solid #FFD60A;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+footer {
+  border-top: 2px solid #FFD60A;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  text-align: center;
+}
+
+/* --- Forms & Inputs --- */
+.input-field,
+select.input-field {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #3ABFF8;
+  background-color: #0B1E3B;
+  color: #E5E7EB;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+.input-field:focus {
+  outline: none;
+  border-color: #FFD60A;
+  box-shadow: 0 0 0 3px rgba(255, 214, 10, 0.5);
+}
+.input-wrapper {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+/* --- Buttons --- */
+.btn {
+  color: #0B1E3B;
+  background-color: #FFD60A;
+  font-weight: bold;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn-secondary {
+  background-color: #3ABFF8;
+  color: #E5E7EB;
+}

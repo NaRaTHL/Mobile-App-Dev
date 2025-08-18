@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple Unit Converter</title>
+    <link rel="stylesheet" href="statics/styles.css"/>
+</head>
+<body>
+    <div class="container">
+        <h2>Simple Unit Converter</h2>
+
+        <form id="length-form" class="section-box">
+            <label for="lengthValue" class="label text-blue">Length:</label>
+            <div class="input-wrapper">
+                <input type="number" id="lengthValue" placeholder="Enter value" class="input-field" required>
+                <select id="lengthUnit" class="input-field">
+                    <option value="mToFt">Meters to Feet</option>
+                    <option value="kmToMi">Kilometers to Miles</option>
+                </select>
+            </div>
+            <div style="margin-top: 1rem;">
+                <button type="submit" class="btn" style="width: 100%;">Convert</button>
+            </div>
+            <p id="lengthResult" class="text-green"></p>
+        </form>
+
+        <form id="temp-form" class="section-box">
+            <label for="tempValue" class="label text-blue">Temperature:</label>
+            <div class="input-wrapper">
+                <input type="number" id="tempValue" placeholder="Enter value" class="input-field" required>
+                <select id="tempUnit" class="input-field">
+                    <option value="cToF">Celsius to Fahrenheit</option>
+                    <option value="kToC">Kelvin to Celsius</option>
+                </select>
+            </div>
+             <div style="margin-top: 1rem;">
+                <button type="submit" class="btn" style="width: 100%;">Convert</button>
+            </div>
+            <p id="tempResult" class="text-green"></p>
+        </form>
+
+        <form id="area-form" class="section-box">
+            <label for="areaValue" class="label text-blue">Area:</label>
+            <div class="input-wrapper">
+                <input type="number" id="areaValue" placeholder="Enter value" class="input-field" required>
+                <select id="areaUnit" class="input-field">
+                    <option value="sqmToSqft">Square Meters to Square Feet</option>
+                    <option value="sqkmToSqmi">Square Kilometers to Square Miles</option>
+                </select>
+            </div>
+             <div style="margin-top: 1rem;">
+                <button type="submit" class="btn" style="width: 100%;">Convert</button>
+            </div>
+            <p id="areaResult" class="text-green"></p>
+        </form>
+
+        <div style="margin-top: 1.5rem;">
+            <button type="button" class="btn btn-secondary" onclick="history.back()" style="width: 100%;">Back</button>
+        </div>
+    </div>
+
+    <script>
+        const converters = {
+          length: { mToFt: val => `${(val * 3.28084).toFixed(2)} ft`, kmToMi: val => `${(val * 0.621371).toFixed(2)} mi` },
+          temp: { cToF: val => `${((val * 9/5) + 32).toFixed(2)} °F`, kToC: val => `${(val - 273.15).toFixed(2)} °C` },
+          area: { sqmToSqft: val => `${(val * 10.7639).toFixed(2)} ft²`, sqkmToSqmi: val => `${(val * 0.386102).toFixed(4)} mi²` }
+        };
+        function runConversion(type, value, unit) {
+          if (!type || !value || !unit) return;
+          const val = parseFloat(value);
+          const result = converters[type]?.[unit]?.(val);
+          if (result) {
+            document.getElementById(`${type}Result`).innerText = result;
+            document.getElementById(`${type}Value`).value = val;
+            document.getElementById(`${type}Unit`).value = unit;
+          }
+        }
+        function handleFormSubmit(type, e) {
+          e.preventDefault();
+          const input = document.getElementById(`${type}Value`);
+          if (!input.reportValidity()) { return; }
+          const value = input.value;
+          const unit = document.getElementById(`${type}Unit`).value;
+          runConversion(type, value, unit);
+          const state = { type, value, unit };
+          const url = new URL(window.location);
+          url.searchParams.set('type', type);
+          url.searchParams.set('value', value);
+          url.searchParams.set('unit', unit);
+          history.pushState(state, '', url);
+        }
+        document.getElementById('length-form').addEventListener('submit', (e) => handleFormSubmit('length', e));
+        document.getElementById('temp-form').addEventListener('submit', (e) => handleFormSubmit('temp', e));
+        document.getElementById('area-form').addEventListener('submit', (e) => handleFormSubmit('area', e));
+        window.addEventListener('popstate', (e) => {
+          ['lengthResult', 'tempResult', 'areaResult'].forEach(id => document.getElementById(id).innerText = '');
+          if (e.state) {
+            runConversion(e.state.type, e.state.value, e.state.unit);
+          } else {
+             ['lengthValue', 'tempValue', 'areaValue'].forEach(id => document.getElementById(id).value = '');
+          }
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+          const params = new URLSearchParams(window.location.search);
+          runConversion(params.get('type'), params.get('value'), params.get('unit'));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Calculator</title>
+    <link rel="stylesheet" href="statics/styles.css"/>
+</head>
+<body>
+    <div class="container">
+        <h1>Calculate Change</h1>
+        <form id="change-form" novalidate>
+            <div class="form-group">
+                <label for="amount" class="label text-blue">Enter Amount:</label>
+                <div class="input-wrapper">
+                    <input type="number" id="amount" name="amount" placeholder="e.g., 11874" class="input-field" required min="1" step="1">
+                    <br>
+                    <button type="submit" class="btn">Submit</button>
+                    <button type="button" class="btn btn-secondary" onclick="history.back()">Back</button>
+                </div>
+            </div>
+        </form>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('change-form');
+        const amountInput = document.getElementById('amount');
+        const resultDiv = document.getElementById('result');
+        const denominations = [10000, 1000, 500, 100, 50, 20, 1];
+
+        const calculateAndDisplayChange = (amount) => {
+            resultDiv.innerHTML = '';
+            if (isNaN(amount) || amount <= 0) {
+                resultDiv.innerHTML = '<p>Please enter a valid positive number.</p>';
+                return;
+            }
+            let remainingAmount = amount;
+            denominations.forEach(denom => {
+                if (remainingAmount >= denom) {
+                    const count = Math.floor(remainingAmount / denom);
+                    remainingAmount %= denom;
+                    const p = document.createElement('p');
+                    p.className = 'section-box'; /* Using this class for consistent item boxes */
+                    p.textContent = `${count} of ฿${denom}`;
+                    resultDiv.appendChild(p);
+                }
+            });
+        };
+        const resetUI = () => {
+            amountInput.value = '';
+            resultDiv.innerHTML = '<p>Enter an amount to see the result.</p>';
+        };
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!amountInput.reportValidity()) { return; }
+            const amount = parseInt(amountInput.value, 10);
+            calculateAndDisplayChange(amount);
+            const url = new URL(window.location);
+            url.searchParams.set('amount', amount);
+            history.pushState({ amount: amount }, '', url);
+        });
+        window.addEventListener('popstate', (e) => {
+            if (e.state && e.state.amount) {
+                const amount = e.state.amount;
+                amountInput.value = amount;
+                calculateAndDisplayChange(amount);
+            } else { resetUI(); }
+        });
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const amountFromUrl = urlParams.get('amount');
+            if (amountFromUrl) {
+                const amount = parseInt(amountFromUrl, 10);
+                if (!isNaN(amount)) {
+                    amountInput.value = amount;
+                    calculateAndDisplayChange(amount);
+                } else { resetUI(); }
+            } else { resetUI(); }
+        });
+    </script>
+</body>
+</html>

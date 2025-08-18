@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade Assignment</title>
+    <link rel="stylesheet" href="statics/styles.css"/>
+</head>
+<body>
+    <div class="container">
+        <h1>Grade Assignment</h1>
+        <p>Enter a score from 0 to 100 to find the corresponding letter grade.</p>
+
+        <div style="margin-top: 2rem;">
+            <label for="scoreInput" class="label text-blue">Enter Score:</label>
+            <div class="input-wrapper">
+                <input type="number" id="scoreInput" class="input-field" placeholder="0-100" required min="0" max="100" onkeydown="if(event.key === 'Enter') document.getElementById('submitButton').click()">
+                <button id="submitButton" class="btn">Submit</button>
+                <button id="backButton" class="btn btn-secondary" onclick="history.back()">Back</button>
+            </div>
+        </div>
+
+        <div id="result" class="text-green"></div>
+
+        <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid #3ABFF8; text-align: left; color: #9CA3AF;">
+            <h2 style="font-size: 1.25rem; text-align: center; border: none;">Grading Scale</h2>
+            <ul style="list-style-type: none; padding: 0; max-width: 200px; margin: auto;">
+                <li><strong class="text-blue">A:</strong> 90 – 100</li>
+                <li><strong class="text-blue">B:</strong> 80 – 89</li>
+                <li><strong class="text-blue">C:</strong> 70 – 79</li>
+                <li><strong class="text-blue">D:</strong> 60 – 69</li>
+                <li><strong class="text-blue">F:</strong> Below 60</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const scoreInput = document.getElementById('scoreInput');
+        const submitButton = document.getElementById('submitButton');
+        const resultDiv = document.getElementById('result');
+
+        function displayGradeForScore(score) {
+            if (score === null || isNaN(score)) {
+                resultDiv.innerHTML = '';
+                scoreInput.value = '';
+                return;
+            }
+            scoreInput.value = score;
+            let grade = '';
+            if (score >= 90) { grade = 'A'; } 
+            else if (score >= 80) { grade = 'B'; } 
+            else if (score >= 70) { grade = 'C'; } 
+            else if (score >= 60) { grade = 'D'; } 
+            else { grade = 'F'; }
+            resultDiv.innerHTML = `Your grade is <span style="color: #FFD60A;">"${grade}"</span>.`;
+        }
+        function handleSubmit() {
+            if (!scoreInput.checkValidity()) {
+                scoreInput.reportValidity();
+                return;
+            }
+            const score = parseFloat(scoreInput.value);
+            displayGradeForScore(score);
+            const newUrl = `${window.location.pathname}?score=${score}`;
+            history.pushState({ score: score }, '', newUrl);
+        }
+        submitButton.addEventListener('click', handleSubmit);
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            const scoreFromUrl = params.get('score');
+            if (scoreFromUrl !== null && !isNaN(scoreFromUrl)) {
+                displayGradeForScore(parseFloat(scoreFromUrl));
+            }
+        });
+        window.addEventListener('popstate', (event) => {
+            const params = new URLSearchParams(window.location.search);
+            const scoreFromUrl = params.get('score');
+            const score = scoreFromUrl ? parseFloat(scoreFromUrl) : null;
+            displayGradeForScore(score);
+        });
+    </script>
+</body>
+</html>
